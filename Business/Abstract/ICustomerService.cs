@@ -12,7 +12,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Customer>> GetAll();
 
-        IDataResult<Customer> Get(int id);
+        IDataResult<Customer> GetById(int id);
 
         IResult Add(Customer customer);
 

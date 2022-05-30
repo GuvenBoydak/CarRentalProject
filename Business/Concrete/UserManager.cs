@@ -32,7 +32,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserDeleted);
         }
 
-        public IDataResult<User> Get(int id)
+        public IDataResult<User> GetById(int id)
         {
             return new SuccessDataResult<User>(_userDal.Get(x => x.Id == id));
         }

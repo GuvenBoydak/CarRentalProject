@@ -22,16 +22,17 @@ namespace Business.Concrete
 
         public IResult Add(Rental rental)
         {
-            bool result = _rentalDal.GetAll(x => x.Car.Id == rental.CarId && rental.ReturnDate == null || rental.RentDate > DateTime.Now).Any();
-
-            if (rental.ReturnDate==null)
+            foreach (Rental item in _rentalDal.GetAll())
             {
-                _rentalDal.Add(rental);
+                if (item.CarId == rental.CarId)
+                {
+                    if (item.ReturnDate>rental.RentDate)
+                    {
+                        return new ErrorResult(Messages.RentalInvalid);
+                    }
+                }
             }
-            else
-            {
-                return new ErrorResult(Messages.RentalInvalid);
-            }
+            _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdded);
         }
 
@@ -41,7 +42,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.RentalDeleted);
         }
 
-        public IDataResult<Rental> Get(int id)
+        public IDataResult<Rental> GetById(int id)
         {
             return new SuccessDataResult<Rental>(_rentalDal.Get(x => x.Id == id));
         }
