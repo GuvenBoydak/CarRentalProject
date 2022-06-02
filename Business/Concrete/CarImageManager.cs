@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Utilities.Business;
 using Core.Utilities.Helper;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -25,8 +26,12 @@ namespace Business.Concrete
             _fileHelper = fileHelper;
         }
 
-        public IResult Add(CarImage carImage,IFormFile file)
+        public IResult Add(CarImage carImage, IFormFile file)
         {
+            IResult result = BusinessRules.Run(CheckCarImageLimits(carImage.CarId));
+            if (result!=null)
+                return result;
+
             carImage.ImagePath = _fileHelper.Add(file, PathConstant.ImagePath).Message;
             carImage.Date = DateTime.Now;
             _carImageDal.Add(carImage);
@@ -58,5 +63,18 @@ namespace Business.Concrete
             return new SuccessResult();
 
         }
+
+
+        private IResult CheckCarImageLimits(int id)
+        {
+            var result = _carImageDal.GetAll(x => x.CarId == id).Count;
+            if (result > 5)
+                return new ErrorResult(Messages.CarImageLimitsInvalid);
+            else
+                return new SuccessResult();
+        }
+
+
+
     }
 }
