@@ -29,5 +29,8 @@ namespace Entities.Concrete
         public virtual Brand Brand { get; set; }
 
         public virtual ICollection<Rental> Rentals { get; set; }
+
+        public virtual ICollection<CarImage> CarImages { get; set; }
+
     }
 }

@@ -30,7 +30,7 @@ namespace Core.Aspects.Autofac.Validation
         //ValidationAspect attribute'nu OnBefore() Metod'un başında çalışsın diyoruz.
         protected override void OnBefore(IInvocation invocation)
         {
-            //Çalişma anında Activator.CreateInstance() ile ValidationAspect'e parametre olarak girilen nesneyi çalışma anında instance'ini oluşturuyoruz.
+            //Çalişma anında Activator.CreateInstance() ile ValidationAspect'e parametre olarak girilen nesneyi çalışma anında instance'ini oluşturuyoruz.(IValidator) ile IValdidator türünde kullanılabilir hale getirdik.
             var validator = (IValidator)Activator.CreateInstance(_validatorType);
             //BaseType.GetGenericArguments()[0] ile _validatorType'in BaseType'ini bul ve onun Generic argumanın 0. indexteki tipi buluyoruz.
             var entityType = _validatorType.BaseType.GetGenericArguments()[0];

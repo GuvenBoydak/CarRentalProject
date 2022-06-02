@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(CarRentalContext))]
-    [Migration("20220529201240_mig_create")]
+    [Migration("20220601154514_mig_create")]
     partial class mig_create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,29 @@ namespace DataAccess.Migrations
                     b.ToTable("Cars");
                 });
 
+            modelBuilder.Entity("Entities.Concrete.CarImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("CarImages");
+                });
+
             modelBuilder.Entity("Entities.Concrete.Color", b =>
                 {
                     b.Property<int>("Id")
@@ -102,7 +125,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Rental", b =>
@@ -130,7 +153,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Rental");
+                    b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("Entities.Concrete.User", b =>
@@ -154,7 +177,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Car", b =>
@@ -174,6 +197,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Brand");
 
                     b.Navigation("Color");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.CarImage", b =>
+                {
+                    b.HasOne("Entities.Concrete.Car", "Car")
+                        .WithMany("CarImages")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Customer", b =>
@@ -213,6 +247,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrete.Car", b =>
                 {
+                    b.Navigation("CarImages");
+
                     b.Navigation("Rentals");
                 });
 
