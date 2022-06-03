@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using Core.Aspects.Autofac.Performance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace Core.Utilities.Interceptors
                 .GetCustomAttributes<MethodInterceptionBaseAttribute>(true);
             //methodAttributes'in Metodları okunan Attributeleri classAttribute listesine atanır.
             classAttributes.AddRange(methodAttributes);
+
+            //Tüm methodlara PerformanceAspect uygulamış olduk.
+            classAttributes.Add(new PerformanceAspect(3));
 
             //classAttributes çalişma sırasını Priority(öncelik sırası) e göre belirle ve bir diziye ata.
             return classAttributes.OrderBy(x => x.Priority).ToArray();

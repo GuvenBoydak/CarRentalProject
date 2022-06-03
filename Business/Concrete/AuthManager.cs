@@ -43,7 +43,7 @@ namespace Business.Concrete
         {
             IDataResult<User> userToCheck = _userService.GetByMail(userForLoginDto.Email);
 
-            if (userToCheck == null)
+            if (userToCheck.Data == null)
             {
                 return new ErrorDataResult<User>(Messages.UserNotFound);
             }
@@ -58,7 +58,8 @@ namespace Business.Concrete
 
         public IResult UserExists(string email)
         {
-            if (_userService.GetByMail(email) != null)
+            var result = _userService.GetByMail(email);
+            if (result.Data != null)
             {
                 return new ErrorResult(Messages.UserAlreadyExists);
             }

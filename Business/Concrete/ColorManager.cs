@@ -21,7 +21,7 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        [SecuredOperation("add,admin")]
+        [SecuredOperation("add,Product.Add")]
         public IResult Add(Color color)
         {
             _colorDal.Add(color);

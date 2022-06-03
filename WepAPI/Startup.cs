@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.DependencyResolvers;
+using Core.Extensions;
 using Core.Utilities.IOC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
@@ -59,8 +61,6 @@ namespace WepAPI
             //services.AddSingleton<IRentalDal, EfRentalDal>();
             #endregion
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WepAPI", Version = "v1" });
@@ -69,7 +69,7 @@ namespace WepAPI
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-            //Yetkilendirme olarak jwtBearer kullanılcagını belırtıyoruz.
+            //Yetkilendirme olarak jwtBearer kullanılcagını belirtıyoruz.
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -84,7 +84,11 @@ namespace WepAPI
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
-            ServiceTool.Create(services);
+            //Birden fazla module'u ekleyebilecegimiz bir yapı oluşturduk.
+            services.AddDependencyResolvers(new ICoreModule[]
+            {
+                new CoreModule()
+            });
 
 
         }
@@ -102,6 +106,8 @@ namespace WepAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
